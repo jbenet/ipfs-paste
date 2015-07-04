@@ -4,8 +4,8 @@ set -o pipefail
 
 # todo: make this cross-platform
 case `uname` in
-Darwin) clipaste=pbpaste ;;
-Linux) clipaste=xsel -o ;;
+Darwin) clipaste="pbpaste" ;;
+Linux) clipaste="xsel -o" ;;
 *) ;;
 esac
 
