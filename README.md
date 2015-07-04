@@ -12,7 +12,7 @@ Paste stuff to [IPFS](http://ipfs.io).
 
 ```sh
 # install from ipfs
-ipfs cat QmUuJtc89mfkD1x6hQC6n5vmMgG9beiLjQstfj6EYLH8MZ >/usr/local/bin/ipfs-paste
+ipfs cat QmVANweZHM7f9vEWKc8ahedJho6QiUBHB9cskkNXefbeyY >/usr/local/bin/ipfs-paste
 chmod +x /usr/local/bin/ipfs-paste
 
 # install from http
