@@ -6,7 +6,7 @@ Paste stuff to [IPFS](http://ipfs.io).
 2. print + copy url to the HTTP gateway
 3. prefetch on the gateway
 
-(note: Today, clipboard only on OSX. Tomorrow, cross platform).
+(note: Today, clipboard only on {OSX, Linux}. Tomorrow, cross platform).
 
 ## Install
 
