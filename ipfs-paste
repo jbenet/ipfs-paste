@@ -4,8 +4,14 @@ set -o pipefail
 
 # todo: make this cross-platform
 case `uname` in
-Darwin) clipaste="pbpaste" ;;
-Linux) clipaste="xsel -o" ;;
+Darwin)
+  clicopy="pbcopy"
+  clipaste="pbpaste"
+  ;;
+Linux)
+  clicopy="xsel -i"
+  clipaste="xsel -o"
+  ;;
 *) ;;
 esac
 
@@ -74,7 +80,7 @@ log " $dir\n"
 
 log "copying url to clipboard..."
 out="http://gateway.ipfs.io/ipfs/$dir/$name"
-echo "$out" | xsel -i
+echo "$out" | $clicopy
 log " copied\n"
 echo "$out"
 
