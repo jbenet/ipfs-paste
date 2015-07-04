@@ -1,0 +1,77 @@
+#!/bin/sh
+set -e
+set -o pipefail
+
+# todo: make this cross-platform
+clipaste=pbpaste
+
+usage() {
+  echo "$0 [-v] [--paste] [<name>]"
+  echo "publish stdin (or pasteboard) to ipfs"
+  exit 0
+}
+
+die() {
+  echo >&2 "error: $@"
+  exit 1
+}
+
+log() {
+  if [ $verbose ]; then
+    printf >&2 "$@"
+  fi
+}
+
+# get user options
+while [ $# -gt 0 ]; do
+  # get options
+  arg="$1"
+  shift
+
+  case "$arg" in
+  -h) usage ;;
+  --help) usage ;;
+  -v) verbose=1 ;;
+  --verbose) verbose=1 ;;
+  --paste) paste=1 ;;
+  --*)
+    die "unrecognised option: '$arg'\n$usage" ;;
+  *)
+    if [ "$name" == "" ]; then
+      name="$arg"
+    else
+      die "too many arguments"
+    fi
+    ;;
+  esac
+done
+
+
+if [ "$name" == "" ]; then
+  name=paste
+fi
+
+if [ $paste ]; then
+  log "paste to ipfs..."
+  fhash=$($clipaste | ipfs add -q)
+else
+  log "stdin to ipfs..."
+  fhash=$(cat | ipfs add -q)
+fi
+log " $fhash\n"
+
+
+log "constructing dir..."
+dir=$(ipfs object new unixfs-dir)
+dir=$(ipfs object patch "$dir" add-link "$name" "$fhash" )
+pin=$(ipfs pin add -r "$dir")
+log " $dir\n"
+
+log "copying url to clipboard..."
+out="http://gateway.ipfs.io/ipfs/$dir/$name"
+echo "$out" | pbcopy
+log " copied\n"
+echo "$out"
+
+log "preloading on the gateways..."
+(curl "$out" 2>/dev/null >/dev/null && log " ok\n") || (true && log " n/a\n")
