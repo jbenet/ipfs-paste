@@ -2,19 +2,6 @@
 set -e
 set -o pipefail
 
-# todo: make this cross-platform
-case `uname` in
-Darwin)
-  clicopy="pbcopy"
-  clipaste="pbpaste"
-  ;;
-Linux)
-  clicopy="xsel -i"
-  clipaste="xsel -o"
-  ;;
-*) ;;
-esac
-
 usage() {
   echo "$0 [-v] [--paste] [<name>]"
   echo "publish stdin (or pasteboard) to ipfs"
@@ -31,6 +18,19 @@ log() {
     printf >&2 "$@"
   fi
 }
+
+# todo: make this cross-platform
+case `uname` in
+Darwin)
+  clicopy="pbcopy"
+  clipaste="pbpaste"
+  ;;
+Linux)
+  clicopy="xsel -i"
+  clipaste="xsel -o"
+  ;;
+*) ;;
+esac
 
 # get user options
 while [ $# -gt 0 ]; do
