@@ -2,8 +2,10 @@
 set -e
 set -o pipefail
 
+USAGE="$0 [-v] [--paste] [<name>]"
+
 usage() {
-  echo "$0 [-v] [--paste] [<name>]"
+  echo "$USAGE"
   echo "publish stdin (or pasteboard) to ipfs"
   exit 0
 }
@@ -43,12 +45,12 @@ while [ $# -gt 0 ]; do
   -v|--verbose) verbose=1 ;;
   --paste) paste=1 ;;
   --*)
-    die "unrecognised option: '$arg'\n$usage" ;;
+    die "unrecognised option: '$arg'\n$USAGE" ;;
   *)
     if [ "$name" = "" ]; then
       name="$arg"
     else
-      die "too many arguments"
+      die "too many arguments\n$USAGE"
     fi
     ;;
   esac
