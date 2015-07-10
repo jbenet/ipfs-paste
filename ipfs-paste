@@ -45,7 +45,7 @@ while [ $# -gt 0 ]; do
   --*)
     die "unrecognised option: '$arg'\n$usage" ;;
   *)
-    if [ "$name" == "" ]; then
+    if [ "$name" = "" ]; then
       name="$arg"
     else
       die "too many arguments"
@@ -55,7 +55,7 @@ while [ $# -gt 0 ]; do
 done
 
 
-if [ "$name" == "" ]; then
+if [ "$name" = "" ]; then
   name=paste
 fi
 
