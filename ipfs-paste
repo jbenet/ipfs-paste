@@ -1,6 +1,4 @@
 #!/bin/sh
-set -e
-set -o pipefail
 
 USAGE="$0 [-v] [--paste] [<name>]"
 
