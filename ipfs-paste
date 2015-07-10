@@ -62,7 +62,7 @@ if [ "$name" = "" ]; then
 fi
 
 if [ $paste ]; then
-  [[ $clipaste ]] || die "clipboard paste unkown for $(uname)"
+  test -n "$clipaste" || die "clipboard paste unkown for $(uname)"
   log "paste to ipfs..."
   fhash=$($clipaste | ipfs add -q)
 else
