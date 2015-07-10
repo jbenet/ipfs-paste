@@ -39,10 +39,8 @@ while [ $# -gt 0 ]; do
   shift
 
   case "$arg" in
-  -h) usage ;;
-  --help) usage ;;
-  -v) verbose=1 ;;
-  --verbose) verbose=1 ;;
+  -h|--help) usage ;;
+  -v|--verbose) verbose=1 ;;
   --paste) paste=1 ;;
   --*)
     die "unrecognised option: '$arg'\n$usage" ;;
