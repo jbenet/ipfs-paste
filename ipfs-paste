@@ -2,21 +2,10 @@
 set -e
 set -o pipefail
 
-# todo: make this cross-platform
-case `uname` in
-Darwin)
-  clicopy="pbcopy"
-  clipaste="pbpaste"
-  ;;
-Linux)
-  clicopy="xsel -i"
-  clipaste="xsel -o"
-  ;;
-*) ;;
-esac
+USAGE="$0 [-v] [--paste] [<name>]"
 
 usage() {
-  echo "$0 [-v] [--paste] [<name>]"
+  echo "$USAGE"
   echo "publish stdin (or pasteboard) to ipfs"
   exit 0
 }
@@ -32,6 +21,19 @@ log() {
   fi
 }
 
+# todo: make this cross-platform
+case $(uname) in
+Darwin)
+  clicopy="pbcopy"
+  clipaste="pbpaste"
+  ;;
+Linux)
+  clicopy="xsel -i"
+  clipaste="xsel -o"
+  ;;
+*) ;;
+esac
+
 # get user options
 while [ $# -gt 0 ]; do
   # get options
@@ -39,30 +41,28 @@ while [ $# -gt 0 ]; do
   shift
 
   case "$arg" in
-  -h) usage ;;
-  --help) usage ;;
-  -v) verbose=1 ;;
-  --verbose) verbose=1 ;;
+  -h|--help) usage ;;
+  -v|--verbose) verbose=1 ;;
   --paste) paste=1 ;;
   --*)
-    die "unrecognised option: '$arg'\n$usage" ;;
+    die "unrecognised option: '$arg'\n$USAGE" ;;
   *)
-    if [ "$name" == "" ]; then
+    if [ "$name" = "" ]; then
       name="$arg"
     else
-      die "too many arguments"
+      die "too many arguments\n$USAGE"
     fi
     ;;
   esac
 done
 
 
-if [ "$name" == "" ]; then
+if [ "$name" = "" ]; then
   name=paste
 fi
 
 if [ $paste ]; then
-  [[ $clipaste ]] || die "clipboard paste unkown for "`uname`
+  test -n "$clipaste" || die "clipboard paste unkown for $(uname)"
   log "paste to ipfs..."
   fhash=$($clipaste | ipfs add -q)
 else
