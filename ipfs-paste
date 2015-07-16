@@ -64,23 +64,36 @@ fi
 if [ $paste ]; then
   test -n "$clipaste" || die "clipboard paste unkown for $(uname)"
   log "paste to ipfs..."
-  fhash=$($clipaste | ipfs add -q)
+
+  date=$(date +"%Y-%m-%dT%H:%M:%SZ")
+  fpath=$(mktemp "/tmp/paste.$date.XXXXXX.txt") ||
+  die "could not 'mktemp /tmp/paste.$date.XXXXXX.txt'"
+
+  $clipaste >"$fpath" ||
+  die "could not paste using '$clipaste'"
+  fhash=$(ipfs add -q <"$fpath") ||
+  die "could not 'ipfs add -q' content from '$fpath'"
 else
   log "stdin to ipfs..."
-  fhash=$(cat | ipfs add -q)
+  fhash=$(cat | ipfs add -q) ||
+  die "could not 'ipfs add -q'"
 fi
 log " $fhash\n"
 
 
 log "constructing dir..."
-dir=$(ipfs object new unixfs-dir)
-dir=$(ipfs object patch "$dir" add-link "$name" "$fhash" )
-pin=$(ipfs pin add -r "$dir")
+dir=$(ipfs object new unixfs-dir) ||
+die "could not 'ipfs object new unixfs-dir'"
+dir=$(ipfs object patch "$dir" add-link "$name" "$fhash") ||
+die "could not 'ipfs object patch $dir add-link $name $fhash'"
+pin=$(ipfs pin add -r "$dir") ||
+die "could not 'ipfs pin add -r $dir'"
 log " $dir\n"
 
 log "copying url to clipboard..."
 out="http://gateway.ipfs.io/ipfs/$dir/$name"
-echo "$out" | $clicopy
+echo "$out" | $clicopy ||
+die "could not copy using '$clicopy'"
 log " copied\n"
 echo "$out"
 
