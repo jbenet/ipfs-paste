@@ -96,4 +96,4 @@ log " copied\n"
 echo "$out"
 
 log "preloading on the gateways..."
-(curl "$out" 2>/dev/null >/dev/null && log " ok\n") || (true && log " n/a\n")
+(curl "$out" >/dev/null 2>&1 && log " ok\n") || log " n/a\n"
