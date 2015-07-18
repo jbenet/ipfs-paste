@@ -26,8 +26,19 @@ Darwin)
   clipaste="pbpaste"
   ;;
 Linux)
-  clicopy="xsel -i"
-  clipaste="xsel -o"
+  if type xsel >/dev/null;
+  then
+    clicopy="xsel -i"
+    clipaste="xsel -o"
+  else
+    if type xclip >/dev/null;
+    then
+      clicopy="xclip -i"
+      clipaste="xclip -o"
+    else
+      die "xsel or xclip is needed on Linux"
+    fi
+  fi
   ;;
 *) ;;
 esac
