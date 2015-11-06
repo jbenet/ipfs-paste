@@ -100,7 +100,7 @@ die "could not 'ipfs pin add -r $dir'"
 log " $dir\n"
 
 log "copying url to clipboard..."
-out="http://gateway.ipfs.io/ipfs/$dir/$name"
+out="https://ipfs.io/ipfs/$dir/$name"
 echo "$out" | $clicopy ||
 die "could not copy using '$clicopy'"
 log " copied\n"
